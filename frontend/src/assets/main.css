@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.no-resize {
+	resize: none;
+}
+
+.mw-360px {
+	max-width: 360px;
+}
+
+.w-6rem {
+	width: 6rem;
+}
