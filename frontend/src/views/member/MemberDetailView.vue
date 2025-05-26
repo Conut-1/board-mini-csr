@@ -5,37 +5,37 @@
             <div class="card-body">
                 <dl class="row mb-0">
                     <dt class="col-sm-3">아이디</dt>
-                    <dd class="col-sm-9" v-text="state.member.id"></dd>
+                    <dd class="col-sm-9" v-text="member.id"></dd>
 
                     <dt class="col-sm-3">이름</dt>
-                    <dd class="col-sm-9" v-text="state.member.name"></dd>
+                    <dd class="col-sm-9" v-text="member.name"></dd>
 
                     <dt class="col-sm-3">이메일주소</dt>
-                    <dd class="col-sm-9" v-text="state.member.email"></dd>
+                    <dd class="col-sm-9" v-text="member.email"></dd>
 
                     <dt class="col-sm-3">생년월일</dt>
-                    <dd class="col-sm-9" v-text="state.member.birthDate"></dd>
+                    <dd class="col-sm-9" v-text="member.birthDate"></dd>
 
                     <dt class="col-sm-3">성별</dt>
-                    <dd class="col-sm-9" v-text="state.member.gender"></dd>
+                    <dd class="col-sm-9" v-text="member.gender"></dd>
 
                     <dt class="col-sm-3">휴대전화번호</dt>
-                    <dd class="col-sm-9" v-text="state.member.phoneNumber"></dd>
+                    <dd class="col-sm-9" v-text="member.phoneNumber"></dd>
 
                     <dt class="col-sm-3">우편번호</dt>
-                    <dd class="col-sm-9" v-text="state.member.postCode"></dd>
+                    <dd class="col-sm-9" v-text="member.postCode"></dd>
 
                     <dt class="col-sm-3">주소</dt>
-                    <dd class="col-sm-9" v-text="state.member.address"></dd>
+                    <dd class="col-sm-9" v-text="member.address"></dd>
 
                     <dt class="col-sm-3">상세주소</dt>
-                    <dd class="col-sm-9" v-text="state.member.detailAddress"></dd>
+                    <dd class="col-sm-9" v-text="member.detailAddress"></dd>
 
                     <!-- <dt class="col-sm-3">취미</dt>
                     <dd class="col-sm-9">독서, 여행, 운동</dd> -->
                 </dl>
                 <!-- TODO: 해당 멤버 로그인 상태일 때, 어드민일 때 출력 -->
-                <router-link :to="{ name: 'memberUpdate', params: { id: state.member.id } }" class="btn btn-primary">수정</router-link>
+                <router-link :to="{ name: 'memberUpdate', params: { id: member.id } }" class="btn btn-primary">수정</router-link>
                 <!-- TODO: 해당 멤버 로그인 상태일 때 출력 -->
                 <button type="button" class="btn btn-danger" id="withdraw-member-button">탈퇴</button>
             </div>
@@ -48,14 +48,15 @@
     import { reactive } from 'vue';
     import { useRoute } from 'vue-router';
 
-    const state = reactive({ member: {}});
+    const member = reactive({});
 
     fetchMember();
 
     async function fetchMember() {
+        // TODO: 실패 처리?
         const route = useRoute();
-        const response = await axios.get(`/api/member/detail/${route.params.id}`)
-        state.member = response.data.member;
+        const response = await axios.get(`/api/member/detail/${route.params.id}`);
+        Object.assign(member, response.data.member);
     }
     // const withdraw = document.body.querySelector("#withdraw-member-button");
 
