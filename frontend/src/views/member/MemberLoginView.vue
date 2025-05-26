@@ -21,10 +21,12 @@
 
 <script setup>
     import axios from 'axios';
-    import { reactive } from 'vue';
+    import { inject, reactive } from 'vue';
     import { useRouter } from 'vue-router';
 
     const router = useRouter();
+
+    const { fetchMe } = inject('actions');
 
     const formData = reactive({ id: '', password: '' });
 
@@ -47,6 +49,7 @@
 
         const response = await axios.post('/api/member/login', params);
 
+        await fetchMe();
         router.push({ name: 'home' });
     }
 </script>

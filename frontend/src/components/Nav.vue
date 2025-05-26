@@ -12,16 +12,29 @@
             </template>
             <template v-if="true">
                 <!-- TODO: 로그인 시 출력 -->
-                <router-link to="/member/detail/:id" class="nav-link header-link rounded p-2">회원정보</router-link>
+                <router-link :to="`/member/detail/${id}`" class="nav-link header-link rounded p-2">회원정보</router-link>
                 <!-- TODO: 회원 정보 -> 아이디, :id를 실제 id로 변경 -->
-                <button class="nav-link header-link rounded p-2">로그아웃</button>
+                <button @click="logout" class="nav-link header-link rounded p-2">로그아웃</button>
             </template>
         </div>
     </nav>
 </template>
 
 <script setup>
+    import axios from 'axios';
+    import { inject } from 'vue';
+
+    const ADMIN_ROLE = 'ROLE_ADMIN';
+
+    const id = inject('id');
+    const roles = inject('roles');
+    const { fetchMe } = inject('actions');
+
     // TODO: 반응형으로 collapse 구현
+    async function logout() {
+        const response = await axios.post('/api/member/logout');
+        fetchMe();
+    }
 </script>
 
 <style scoped>
