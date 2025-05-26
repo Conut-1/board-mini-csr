@@ -32,7 +32,7 @@
                     <td v-text="member.email"></td>
                     <td v-text="member.createDate"></td>
                     <td v-text="member.deleteDate != null ? 'Y' : 'N'"></td>
-                    <td><button v-if="member.locked" class="unlock-button">잠금해제</button></td>
+                    <td><button v-if="member.locked" @click="unlock(member)" class="unlock-button">잠금해제</button></td>
                 </tr>
             </tbody>
         </table>
@@ -69,6 +69,12 @@
         // TODO: status 확인 후에 처리
         const response = await axios.get('/api/member/list');
         memberList.push(...response.data.memberList);
+    }
+
+    async function unlock(member) {
+        // TODO: status 확인 후에 처리
+        const response = await axios.post(`/api/member/unlock/${member.id}`);
+        member.locked = false;
     }
 
 	// const size = document.querySelector("#size");
