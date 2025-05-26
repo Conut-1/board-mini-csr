@@ -133,7 +133,7 @@
 
         if (!confirm("회원 정보를 수정하시겠습니까?")) return;
 
-        const response = axios.post(`/api/member/update/${route.params.id}`, member);
+        const response = await axios.post(`/api/member/update/${route.params.id}`, member);
 
         if (response.data.status === "ok") {
             alert("회원 정보 수정이 성공했습니다.");
