@@ -68,4 +68,9 @@ public class MemberService {
 		member.changeLocked(false);
 		this.memberRepository.save(member);
     }
+
+    public boolean isExist(String memberId) {
+		Member member = this.get(memberId);
+		return member != null;
+    }
 }

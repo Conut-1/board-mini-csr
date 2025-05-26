@@ -97,4 +97,11 @@ public class MemberController {
 		map.put("status", "ok");
 		return map;
 	}
+
+	@GetMapping("/isExistMemberId")
+	public Map<String, Object> isExist(String memberId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isExist", memberService.isExist(memberId));
+		return map;
+	}
 }
