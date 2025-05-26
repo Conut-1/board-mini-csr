@@ -27,7 +27,7 @@
                 </tr>
                 <tr v-for="member in memberList" :key="member.memberNo">
                     <td v-text="member.memberNo"></td>
-                    <td><router-link :to="`/member/detail/${member.id}`" v-text="member.id"></router-link></td>
+                    <td><router-link :to="{ name: 'memberDetail', params: { id: member.id }}" v-text="member.id"></router-link></td>
                     <td v-text="member.name"></td>
                     <td v-text="member.email"></td>
                     <td v-text="member.createDate"></td>
