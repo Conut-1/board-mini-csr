@@ -37,7 +37,7 @@
                 <!-- TODO: 해당 멤버 로그인 상태일 때, 어드민일 때 출력 -->
                 <router-link :to="{ name: 'memberUpdate', params: { id: member.id } }" class="btn btn-primary">수정</router-link>
                 <!-- TODO: 해당 멤버 로그인 상태일 때 출력 -->
-                <button type="button" class="btn btn-danger" id="withdraw-member-button">탈퇴</button>
+                <button type="button" @click="withdraw" class="btn btn-danger" id="withdraw-member-button">탈퇴</button>
             </div>
         </div>
     </div>
@@ -46,7 +46,11 @@
 <script setup>
     import axios from 'axios';
     import { reactive } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
+
+    const router = useRouter();
+
+    const { fetchMe } = inject('actions');
 
     const member = reactive({});
 
@@ -57,6 +61,15 @@
         const route = useRoute();
         const response = await axios.get(`/api/member/detail/${route.params.id}`);
         Object.assign(member, response.data.member);
+    }
+
+    async function withdraw() {
+        if (!confirm("정말 탈퇴하시겠습니까?")) return;
+
+        const resposne = await axios.post('/api/member/withdraw');
+
+        await fetchMe();
+        router.push({ name: 'home' });
     }
     // const withdraw = document.body.querySelector("#withdraw-member-button");
 
