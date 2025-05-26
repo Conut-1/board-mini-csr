@@ -6,7 +6,7 @@
                 <form @submit.prevent="updateMember" id="update-form">
                     <div class="mb-3">
                         <label for="update-id" class="form-label">아이디</label>
-                        <input type="text" v-model="member.id" class="form-control" id="update-id" placeholder="아이디" disabled>
+                        <input type="text" :value="route.params.id" class="form-control" id="update-id" placeholder="아이디" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="update-password" class="form-label">비밀번호</label>
@@ -67,7 +67,6 @@
     const router = useRouter();
 
     const defaultMember = {
-        id: '',
         password: '',
         name: '',
         email: '',
@@ -91,11 +90,6 @@
 
     async function updateMember() {
         // TODO: 포커스 처리
-        if (!(8 <= member.id.length && member.id.length <= 20)) {
-            alert("아이디는 8자 이상 20자 이하로 입력하세요.");
-            return;
-        }
-
         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-]).{8,20}$/
         if (!passwordPattern.test(member.password)) {
             alert("비밀번호가 유효하지 않습니다.");

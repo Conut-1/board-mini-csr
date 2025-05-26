@@ -73,4 +73,36 @@ public class Member {
 	private int 	loginFailure;
 
 	private boolean adminAuth;
+
+	public void changeName(String name) {
+		this.name = name;
+	}
+
+	public void changeEmail(String email) {
+		this.email = email;
+	}
+
+	public void changeBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public void changeGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public void changePhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void changePostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
+	public void changeAddress(String address) {
+		this.address = address;
+	}
+
+	public void changeDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
+	}
 }

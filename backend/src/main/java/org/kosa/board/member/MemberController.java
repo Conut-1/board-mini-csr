@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.kosa.board.member.dto.MemberRegisterDTO;
+import org.kosa.board.member.dto.MemberUpdateDTO;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ public class MemberController {
 	@GetMapping("/detail/{id}")
 	public Map<String, Object> detail(@PathVariable("id") String id) {
 		Map<String, Object> map = new HashMap<>();
-		Member member = memberService.detail(id);
+		Member member = memberService.get(id);
 		if (member == null) {
 			map.put("status", "error");
 			return map;
@@ -53,6 +54,22 @@ public class MemberController {
 			return map;
 		}
 		memberService.create(member);
+		map.put("status", "ok");
+		return map;
+	}
+
+	@PostMapping("/update/{id}")
+	public Map<String, Object> update(@PathVariable("id") String id, @RequestBody @Valid MemberUpdateDTO member, BindingResult bindingResult) {
+		// TODO: id에 대해서 검증 가능? 8 ~ 20자
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (bindingResult.hasErrors()) {
+			List<String> messages = bindingResult.getFieldErrors().stream().map((err) -> err.getField() + ": " + err.getDefaultMessage()).collect(Collectors.toList());
+			map.put("status", "error");
+			map.put("message", messages);
+			return map;
+		}
+
+		memberService.update(id, member);
 		map.put("status", "ok");
 		return map;
 	}

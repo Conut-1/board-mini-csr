@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.kosa.board.common.enums.Gender;
 import org.kosa.board.member.dto.MemberRegisterDTO;
+import org.kosa.board.member.dto.MemberUpdateDTO;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class MemberService {
 		return this.memberRepository.findAll();
 	}
 
-	public Member detail(String id) {
+	public Member get(String id) {
 		Optional<Member> member = this.memberRepository.findById(id);
 		if (member.isPresent()) {
 			return member.get();
@@ -44,6 +45,21 @@ public class MemberService {
 				.address(memberRegister.getAddress())
 				.detailAddress(memberRegister.getDetailAddress())
 				.build();
+		this.memberRepository.save(member);
+	}
+
+	public void update(String id, MemberUpdateDTO memberUpdate) {
+		// TODO: 스프링 시큐리티에서 로그인된 사용자 가져오기
+		// TODO: OSIV를 꺼서 메소드에 @Transactional을 적용하기
+		Member member = this.get(id);
+		member.changeName(memberUpdate.getName());
+		member.changeEmail(memberUpdate.getEmail());
+		member.changeBirthDate(LocalDate.parse(memberUpdate.getBirthDate(), formatter));
+		member.changeGender(Gender.valueOf(memberUpdate.getGender()));
+		member.changePhoneNumber(memberUpdate.getPhoneNumber());
+		member.changePostCode(memberUpdate.getPostCode());
+		member.changeAddress(memberUpdate.getAddress());
+		member.changeDetailAddress(memberUpdate.getDetailAddress());
 		this.memberRepository.save(member);
 	}
 }
