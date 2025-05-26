@@ -5,6 +5,7 @@ const MemberListView = () => import('@/views/member/MemberListView.vue')
 const MemberDetailView = () => import('@/views/member/MemberDetailView.vue')
 const MemberUpdateView = () => import('@/views/member/MemberUpdateView.vue')
 const MemberRegisterView = () => import('@/views/member/MemberRegisterView.vue')
+const MemberLoginView = () => import('@/views/member/MemberLoginView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/member/register',
       name: 'memberRegister',
       component: MemberRegisterView
+    },
+    {
+      path: '/member/login',
+      name: 'memberLogin',
+      component: MemberLoginView
     }
   ],
 })
