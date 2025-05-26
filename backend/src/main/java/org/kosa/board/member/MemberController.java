@@ -32,6 +32,17 @@ public class MemberController {
 		return map;
 	}
 
+	@GetMapping("/me")
+	public Map<String, Object> me(Principal principal) {
+		Map<String, Object> map = new HashMap<>();
+		if (principal == null) {
+			map.put("id", "");
+			return map;
+		}
+		map.put("id", principal.getName());
+		return map;
+	}
+
 	@GetMapping("/detail/{id}")
 	public Map<String, Object> detail(@PathVariable("id") String id) {
 		Map<String, Object> map = new HashMap<>();
