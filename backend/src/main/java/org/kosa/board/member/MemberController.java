@@ -89,4 +89,12 @@ public class MemberController {
 		map.put("status", "ok");
 		return map;
 	}
+
+	@PostMapping("/unlock/{id}")
+	public Map<String, Object> unlock(@PathVariable("id") String id) throws IOException {
+		memberService.unlock(id);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("status", "ok");
+		return map;
+	}
 }

@@ -105,4 +105,8 @@ public class Member {
 	public void changeDetailAddress(String detailAddress) {
 		this.detailAddress = detailAddress;
 	}
+
+	public void changeLocked(boolean locked) {
+		this.locked = locked;
+	}
 }

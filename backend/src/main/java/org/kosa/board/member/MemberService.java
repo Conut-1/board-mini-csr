@@ -62,4 +62,10 @@ public class MemberService {
 		member.changeDetailAddress(memberUpdate.getDetailAddress());
 		this.memberRepository.save(member);
 	}
+
+    public void unlock(String id) {
+		Member member = this.get(id);
+		member.changeLocked(false);
+		this.memberRepository.save(member);
+    }
 }
