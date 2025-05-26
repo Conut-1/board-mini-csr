@@ -106,6 +106,10 @@ public class Member {
 		this.detailAddress = detailAddress;
 	}
 
+	public void changeDeleteDate(LocalDateTime deleteDate) {
+		this.deleteDate = deleteDate;
+	}
+
 	public void changeLocked(boolean locked) {
 		this.locked = locked;
 	}

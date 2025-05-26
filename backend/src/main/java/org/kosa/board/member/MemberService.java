@@ -1,6 +1,7 @@
 package org.kosa.board.member;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -73,4 +74,10 @@ public class MemberService {
 		Member member = this.get(memberId);
 		return member != null;
     }
+
+	public void withdraw(String id) {
+		Member member = this.get(id);
+		member.changeDeleteDate(LocalDateTime.now());
+		this.memberRepository.save(member);
+	}
 }

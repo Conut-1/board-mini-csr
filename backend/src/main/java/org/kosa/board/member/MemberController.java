@@ -1,6 +1,7 @@
 package org.kosa.board.member;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -102,6 +104,15 @@ public class MemberController {
 	public Map<String, Object> isExist(String memberId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isExist", memberService.isExist(memberId));
+		return map;
+	}
+
+	@PostMapping("/withdraw")
+	public Map<String, Object> withdraw(HttpSession session, Principal principal) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		memberService.withdraw(principal.getName());
+		session.invalidate();
+		map.put("status", "ok");
 		return map;
 	}
 }
