@@ -59,18 +59,17 @@
 
 <script setup>
     import { reactive } from 'vue';
+    import axios from 'axios';
 
     const memberList = reactive([]);
 
-    memberList.push({
-        memberNo: 1,
-        id: 'testId',
-        name: 'testName',
-        email: 'test@example.com',
-        createDate: new Date(),
-        deleteDate: null,
-        locked: true
-    });
+    fetchMemberList();
+
+    async function fetchMemberList() {
+        // TODO: status 확인 후에 처리
+        const response = await axios.get('/api/member/list');
+        memberList.push(...response.data.memberList);
+    }
 
 	// const size = document.querySelector("#size");
 	// const searchValue = document.querySelector("#searchValue")
