@@ -29,7 +29,12 @@ public class SecurityConfig {
 
 				response.getWriter().write("{\"status\": \"ok\", \"message\": \"login success\"}");
 			})).
-			logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)).
+			logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout")).logoutSuccessHandler((request, response, authentication) -> {
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.setContentType("application/json;charset=UTF-8");
+
+				response.getWriter().write("{\"status\": \"ok\", \"message\": \"logout success\"}");
+			}).invalidateHttpSession(true)).
 			build();
 	}
 
