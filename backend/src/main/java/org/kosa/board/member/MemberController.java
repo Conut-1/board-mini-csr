@@ -2,13 +2,20 @@ package org.kosa.board.member;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.kosa.board.member.dto.MemberRegisterDTO;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,6 +40,20 @@ public class MemberController {
 			return map;
 		}
 		map.put("member", member);
+		return map;
+	}
+	
+	@PostMapping("/register")
+	public Map<String, Object> register(@RequestBody @Valid MemberRegisterDTO member, BindingResult bindingResult) {
+		Map<String, Object> map = new HashMap<>();
+		if (bindingResult.hasErrors()) {
+			List<String> messages = bindingResult.getFieldErrors().stream().map((err) -> err.getField() + ": " + err.getDefaultMessage()).collect(Collectors.toList()); 
+			map.put("status", "error");
+			map.put("message", messages);
+			return map;
+		}
+		memberService.create(member);
+		map.put("status", "ok");
 		return map;
 	}
 }
