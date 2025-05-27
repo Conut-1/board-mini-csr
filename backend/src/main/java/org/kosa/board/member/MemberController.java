@@ -33,10 +33,10 @@ public class MemberController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
-	public Map<String, Object> list() throws IOException {
+	public ResponseEntity<Map<String, Object>> list() throws IOException {
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberList", memberService.list());
-		return map;
+		return ResponseEntity.ok().body(map);
 	}
 
 	@GetMapping("/me")
