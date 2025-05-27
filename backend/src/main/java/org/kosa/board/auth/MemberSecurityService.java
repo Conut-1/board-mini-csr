@@ -1,9 +1,11 @@
-package org.kosa.board.member;
+package org.kosa.board.auth;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.kosa.board.member.Member;
+import org.kosa.board.member.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

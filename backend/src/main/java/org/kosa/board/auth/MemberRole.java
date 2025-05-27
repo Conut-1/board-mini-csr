@@ -1,4 +1,4 @@
-package org.kosa.board.member;
+package org.kosa.board.auth;
 
 import lombok.Getter;
 
