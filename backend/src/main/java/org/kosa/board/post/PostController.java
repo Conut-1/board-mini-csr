@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.kosa.board.post.dto.PostCreateDTO;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,6 +29,18 @@ public class PostController {
     public Map<String, Object> list() {
         Map<String, Object> map = new HashMap<>();
         map.put("postList", postService.list());
+        return map;
+    }
+
+    @GetMapping("/detail/{id}")
+    public Map<String, Object> detail(@PathVariable("id") int id) {
+        Map<String, Object> map = new HashMap<>();
+        Post post = postService.get(id);
+        if (post == null) {
+            map.put("status", "error");
+            return map;
+        }
+        map.put("post", post);
         return map;
     }
 
