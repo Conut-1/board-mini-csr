@@ -11,6 +11,7 @@ import org.kosa.board.auth.CustomUserDetails;
 import org.kosa.board.member.dto.MemberRegisterDTO;
 import org.kosa.board.member.dto.MemberUpdateDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberService memberService;
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
 	public Map<String, Object> list() throws IOException {
 		Map<String, Object> map = new HashMap<>();
