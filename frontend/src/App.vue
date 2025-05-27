@@ -13,14 +13,19 @@
 
   provide('id', computed(() => id.value));
   provide('roles', computed(() => roles));
-  provide('actions', { fetchMe });
+  provide('actions', { cleanMe, fetchMe });
 
   fetchMe();
 
+  function cleanMe() {
+    id.value = '';
+    roles.length = 0;
+  }
+
   async function fetchMe() {
     const response = await axios.get("/api/member/me");
+    cleanMe();
     id.value = response.data.id;
-    roles.length = 0;
     if (response.data.roles) {
       roles.push(...response.data.roles);
     }

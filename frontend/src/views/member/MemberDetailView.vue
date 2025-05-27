@@ -50,7 +50,7 @@
 
     const router = useRouter();
 
-    const { fetchMe } = inject('actions');
+    const { cleanMe } = inject('actions');
 
     const member = reactive({});
 
@@ -68,7 +68,7 @@
 
         const resposne = await axios.post('/api/member/withdraw');
 
-        await fetchMe();
+        await cleanMe();
         router.push({ name: 'home' });
     }
     // const withdraw = document.body.querySelector("#withdraw-member-button");

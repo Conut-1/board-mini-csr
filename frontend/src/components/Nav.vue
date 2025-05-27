@@ -27,13 +27,13 @@
 
     const id = inject('id');
     const roles = inject('roles');
-    const { fetchMe } = inject('actions');
+    const { cleanMe } = inject('actions');
 
     // TODO: 반응형으로 collapse 구현
     async function logout() {
         // TODO: 서버 API route로 분리
         const response = await axios.post('/api/member/logout');
-        await fetchMe();
+        cleanMe();
         router.push({ name: 'home' });
     }
 </script>
