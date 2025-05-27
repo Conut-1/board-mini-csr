@@ -12,7 +12,7 @@
             </template>
             <template v-if="true">
                 <!-- TODO: 로그인 시 출력 -->
-                <router-link :to="`/member/detail/${id}`" class="nav-link header-link rounded p-2">회원정보</router-link>
+                <router-link :to="`/member/detail/${id}`" v-text="`${id}`" class="nav-link header-link rounded p-2"></router-link>
                 <!-- TODO: 회원 정보 -> 아이디, :id를 실제 id로 변경 -->
                 <button @click="logout" class="nav-link header-link rounded p-2">로그아웃</button>
             </template>
