@@ -1,14 +1,9 @@
 package org.kosa.board.auth;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.kosa.board.member.Member;
 import org.kosa.board.member.MemberRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,17 +18,10 @@ public class MemberSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Optional<Member> _member = this.memberRepository.findById(id);
-        if (_member.isEmpty()) {
+        Optional<Member> member = this.memberRepository.findById(id);
+        if (member.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        Member member = _member.get();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (member.isAdminAuth()) {
-            authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority(MemberRole.USER.getValue()));
-        }
-        return new User(member.getId(), member.getPassword(), authorities);
+        return new CustomUserDetails(member.get());
     }
 }
