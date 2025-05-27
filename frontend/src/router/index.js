@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const MemberListView = () => import('@/views/member/MemberListView.vue')
 const MemberDetailView = () => import('@/views/member/MemberDetailView.vue')
@@ -16,7 +15,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: PostListView,
     },
     {
       path: '/member/list',
