@@ -9,12 +9,10 @@
                     <input type="password" v-model="formData.password" class="form-control" placeholder="비밀번호">
                 </div>
                 <div class="d-grid mb-3">
-                    <input type="submit" class="btn text-white bg-primary" value="로그인"></input>
+                    <input type="submit" class="btn text-white btn-primary" value="로그인"></input>
                 </div>
             </form>
-            <div class="d-flex justify-content-center small">
-                <a href="register" class="text-decoration-none text-secondary">회원가입</a>
-            </div>
+            <router-link :to="{ name: 'memberRegister' }" class="btn btn-light text-secondary">회원가입</router-link>
         </div>
     </div>
 </template>
