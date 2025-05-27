@@ -38,15 +38,14 @@ public class MemberController {
 	}
 
 	@GetMapping("/me")
-	public Map<String, Object> me(@AuthenticationPrincipal CustomUserDetails user) {
-		Map<String, Object> map = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> me(@AuthenticationPrincipal CustomUserDetails user) {
 		if (user == null) {
-			map.put("id", "");
-			return map;
+			return ResponseEntity.ok(null);
 		}
+		Map<String, Object> map = new HashMap<>();
 		map.put("id", user.getId());
 		map.put("roles", user.getRoles());
-		return map;
+		return ResponseEntity.ok(map);
 	}
 
 	@GetMapping("/detail/{id}")

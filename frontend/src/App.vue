@@ -25,8 +25,8 @@
   async function fetchMe() {
     const response = await axios.get("/api/member/me");
     cleanMe();
-    id.value = response.data.id;
-    if (response.data.roles) {
+    if (response.data) {
+      id.value = response.data.id;
       roles.push(...response.data.roles);
     }
   }
