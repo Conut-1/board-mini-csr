@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.kosa.board.auth.CustomUserDetails;
 import org.kosa.board.member.dto.MemberRegisterDTO;
 import org.kosa.board.member.dto.MemberUpdateDTO;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,15 +38,14 @@ public class MemberController {
 	}
 
 	@GetMapping("/me")
-	public Map<String, Object> me(@AuthenticationPrincipal UserDetails user) {
+	public Map<String, Object> me(@AuthenticationPrincipal CustomUserDetails user) {
 		Map<String, Object> map = new HashMap<>();
 		if (user == null) {
 			map.put("id", "");
 			return map;
 		}
-		List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-		map.put("id", user.getUsername());
-		map.put("roles", roles);
+		map.put("id", user.getId());
+		map.put("roles", user.getRoles());
 		return map;
 	}
 

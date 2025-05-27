@@ -41,4 +41,8 @@ public class CustomUserDetails implements UserDetails {
     public String getId() {
         return this.id;
     }
+
+    public List<String> getRoles() {
+        return this.authorities.stream().map(GrantedAuthority::getAuthority).toList();
+    }
 }
