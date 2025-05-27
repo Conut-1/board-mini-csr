@@ -54,6 +54,7 @@
                         <a href="${pageContext.request.contextPath}/post/create" class="btn btn-primary">글쓰기</a>
                     </div>
                 </div> -->
+                <router-link :to="{ name: 'postCreate' }" class="btn btn-primary">글쓰기</router-link>
             </div>
         </div>
     </div>

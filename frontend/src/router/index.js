@@ -8,6 +8,7 @@ const MemberRegisterView = () => import('@/views/member/MemberRegisterView.vue')
 const MemberLoginView = () => import('@/views/member/MemberLoginView.vue')
 const PostListView = () => import('@/views/post/PostListView.vue')
 const PostDetailView = () => import('@/views/post/PostDetailView.vue')
+const PostCreateView = () => import('@/views/post/PostCreateView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/post/detail/:id',
       name: 'postDetail',
       component: PostDetailView
+    },
+    {
+      path: '/post/create',
+      name: 'postCreate',
+      component: PostCreateView
     }
   ],
 })
