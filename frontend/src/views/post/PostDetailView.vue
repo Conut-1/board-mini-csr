@@ -21,8 +21,8 @@
                     <!-- TODO: 관리자 삭제 -->
                     <button type="button" class="btn btn-danger" id="admin-delete-post-button">관리자 삭제</button>
                     <!-- TODO: 사용자 삭제 -->
-                    <button type="button" class="btn btn-danger" id="delete-post-button">삭제</button>
-                    <input type="password" class="form-control w-6rem" id="delete-post-password">
+                    <button @click="deletePost" type="button" class="btn btn-danger" id="delete-post-button">삭제</button>
+                    <input type="password" v-model="password" class="form-control w-6rem" id="delete-post-password">
                 </div>
             </div>
         </div>
@@ -31,18 +31,25 @@
 
 <script setup>
     import axios from 'axios';
-    import { reactive } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { reactive, ref } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
 
+    const router = useRouter();
     const route = useRoute();
 
     const post = reactive({});
+    const password = ref('');
 
     fetchPost();
 
     async function fetchPost() {
         const response = await axios.get(`/api/post/detail/${route.params.id}`);
         Object.assign(post, response.data.post);
+    }
+
+    async function deletePost() {
+        const response = await axios.post(`/api/post/delete/${route.params.id}`, { password: password.value });
+        router.push({ name: 'postList' });
     }
 
     // const adminDeletePostButton = document.querySelector("#admin-delete-post-button");
