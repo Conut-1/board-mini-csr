@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.kosa.board.post.dto.PostCreateDTO;
+import org.kosa.board.post.dto.PostUpdateDTO;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,12 @@ public class PostService {
             return post.get();
         }
         return null;
+    }
+
+    public void update(int id, PostUpdateDTO postUpdate) {
+        Post post = this.get(id);
+        post.changeTitle(postUpdate.getTitle());
+        post.changeContent(postUpdate.getContent());
+        this.postRepository.save(post);
     }
 }
