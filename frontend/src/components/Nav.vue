@@ -3,17 +3,13 @@
         <router-link to="/" class="navbar-brand">홈</router-link>
         <div class="d-flex align-items-center gap-2">
             <router-link to="/post/list" class="nav-link header-link rounded p-2">게시물 목록</router-link>
-            <router-link to="/member/list"  class="nav-link header-link rounded p-2">회원 목록</router-link>
-            <!-- TODO: 어드민일 때 출력 -->
-            <template v-if="true">
-                <!-- TODO: 로그인 상태 아닐 때 출력 -->
+            <router-link v-if="roles.includes(ADMIN_ROLE)" to="/member/list" class="nav-link header-link rounded p-2">회원 목록</router-link>
+            <template v-if="!id">
                 <router-link to="/member/login" class="nav-link header-link rounded p-2">로그인</router-link>
                 <router-link to="/member/register" class="nav-link header-link rounded p-2">회원가입</router-link>
             </template>
-            <template v-if="true">
-                <!-- TODO: 로그인 시 출력 -->
+            <template v-if="id">
                 <router-link :to="`/member/detail/${id}`" v-text="`${id}`" class="nav-link header-link rounded p-2"></router-link>
-                <!-- TODO: 회원 정보 -> 아이디, :id를 실제 id로 변경 -->
                 <button @click="logout" class="nav-link header-link rounded p-2">로그아웃</button>
             </template>
         </div>
@@ -23,8 +19,11 @@
 <script setup>
     import axios from 'axios';
     import { inject } from 'vue';
+    import { useRouter } from 'vue-router';
 
     const ADMIN_ROLE = 'ROLE_ADMIN';
+
+    const router = useRouter();
 
     const id = inject('id');
     const roles = inject('roles');
@@ -32,8 +31,10 @@
 
     // TODO: 반응형으로 collapse 구현
     async function logout() {
+        // TODO: 서버 API route로 분리
         const response = await axios.post('/api/member/logout');
-        fetchMe();
+        await fetchMe();
+        router.push({ name: 'home' });
     }
 </script>
 
