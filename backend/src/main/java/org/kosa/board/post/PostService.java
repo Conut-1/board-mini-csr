@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.kosa.board.post.dto.PostCreateDTO;
+import org.kosa.board.post.dto.PostDeleteDTO;
 import org.kosa.board.post.dto.PostUpdateDTO;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,10 @@ public class PostService {
         post.changeTitle(postUpdate.getTitle());
         post.changeContent(postUpdate.getContent());
         this.postRepository.save(post);
+    }
+
+    public void delete(int id, PostDeleteDTO postDelete) {
+        Post post = this.get(id);
+        this.postRepository.delete(post);
     }
 }

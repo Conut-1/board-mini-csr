@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.kosa.board.post.dto.PostCreateDTO;
+import org.kosa.board.post.dto.PostDeleteDTO;
 import org.kosa.board.post.dto.PostUpdateDTO;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,4 +75,19 @@ public class PostController {
 		map.put("status", "ok");
 		return map;
 	}
+
+    @PostMapping("/delete/{id}")
+    public Map<String, Object> delete(@PathVariable("id") int id, @RequestBody @Valid PostDeleteDTO post, BindingResult bindingResult) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (bindingResult.hasErrors()) {
+			List<String> messages = bindingResult.getFieldErrors().stream().map((err) -> err.getField() + ": " + err.getDefaultMessage()).collect(Collectors.toList()); 
+			map.put("status", "error");
+			map.put("message", messages);
+			return map;
+		}
+
+		postService.delete(id, post);
+		map.put("status", "ok");
+		return map;
+    }
 }
