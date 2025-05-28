@@ -25,15 +25,7 @@
                 <tr v-if="paging.content.length === 0">
                     <td class="text-center" colspan="7" >검색결과가 없습니다</td>
                 </tr>
-                <tr v-for="member in paging.content" :key="member.memberNo">
-                    <td v-text="member.memberNo"></td>
-                    <td><router-link :to="{ name: 'memberDetail', params: { id: member.id }}" v-text="member.id"></router-link></td>
-                    <td v-text="member.name"></td>
-                    <td v-text="member.email"></td>
-                    <td v-text="member.createDate"></td>
-                    <td v-text="member.deleteDate != null ? 'Y' : 'N'"></td>
-                    <td><button v-if="member.locked" @click="unlock(member)" class="unlock-button">잠금해제</button></td>
-                </tr>
+                <MemberItem v-for="member in paging.content" :key="member.memberNo" v-bind="member"></MemberItem>
             </tbody>
         </table>
         <div v-if="!paging.empty">
@@ -57,6 +49,7 @@
     import axios from 'axios';
     import { range } from 'lodash';
     import { useRoute, useRouter } from 'vue-router';
+    import MemberItem from '@/components/member/MemberItem.vue';
 
     const route = useRoute();
     const router = useRouter();
@@ -91,11 +84,5 @@
         const query = { ...route.query };
         query.size = size.value;
         router.push({ name: 'memberList', query });
-    }
-
-    async function unlock(member) {
-        // TODO: status 확인 후에 처리
-        const response = await axios.post(`/api/member/unlock/${member.id}`);
-        member.locked = false;
     }
 </script>
