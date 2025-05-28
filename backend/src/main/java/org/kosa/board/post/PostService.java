@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,6 +52,9 @@ public class PostService {
 
     public void update(int id, PostUpdateDTO postUpdate) {
         Post post = this.get(id);
+        if (!post.getPassword().equals(postUpdate.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 틀렸습니다.");
+        }
         post.changeTitle(postUpdate.getTitle());
         post.changeContent(postUpdate.getContent());
         this.postRepository.save(post);
@@ -62,6 +67,9 @@ public class PostService {
 
     public void delete(int id, PostDeleteDTO postDelete) {
         Post post = this.get(id);
+        if (!post.getPassword().equals(postDelete.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 틀렸습니다.");
+        }
         this.postRepository.delete(post);
     }
 }
