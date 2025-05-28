@@ -8,7 +8,7 @@
                         <label for="register-id" class="form-label">아이디</label>
                         <div class="input-group">
                             <input type="text" v-model="member.id" class="form-control" id="register-id" placeholder="아이디">
-                            <button class="btn btn-outline-primary" type="button" id="valid-check-button">중복확인</button>
+                            <button type="button" @click="checkIdDuplicate" class="btn btn-outline-primary">중복확인</button>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -116,6 +116,8 @@
     const passwordCheck = ref('');
 
     // TODO: 유효성 검사
+    let validChecked = false;
+    let validId = "";
 
     async function register() {
         try {
@@ -124,6 +126,18 @@
             router.push({ name: 'home' });
         } catch (e) {
             alert('회원가입이 실패했습니다.');
+        }
+    }
+
+    async function checkIdDuplicate() {
+        if (8 <= member.id.length && member.id.length <= 20) {
+            const response = await axios.get("/api/member/isExistMemberId", {
+                params: { memberId: member.id }
+            });
+            if (!response.data.isExist) {
+                validChecked = true;
+                validId = member.id;
+            }
         }
     }
 
