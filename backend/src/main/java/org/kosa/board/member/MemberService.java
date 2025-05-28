@@ -11,11 +11,14 @@ import org.kosa.board.common.enums.Gender;
 import org.kosa.board.member.dto.MemberRegisterDTO;
 import org.kosa.board.member.dto.MemberUpdateDTO;
 import org.kosa.board.page.PageResponseVO;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +47,8 @@ public class MemberService {
 	}
 
 	public void create(MemberRegisterDTO memberRegister) {
-		Member member = Member.builder()
+		try {
+			Member member = Member.builder()
 				.id(memberRegister.getId())
 				.password(memberRegister.getPassword())
 				.name(memberRegister.getName())
@@ -56,7 +60,10 @@ public class MemberService {
 				.address(memberRegister.getAddress())
 				.detailAddress(memberRegister.getDetailAddress())
 				.build();
-		this.memberRepository.save(member);
+			this.memberRepository.save(member);
+		} catch (DataIntegrityViolationException exception) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "아이디가 중복입니다.");
+		}
 	}
 
 	public void update(String id, MemberUpdateDTO memberUpdate) {
