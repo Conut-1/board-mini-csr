@@ -51,4 +51,8 @@ public class Post {
 	public void changeContent(String content) {
 		this.content = content;
 	}
+
+    public void changeViews(int views) {
+        this.views = views;
+    }
 }

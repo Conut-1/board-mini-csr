@@ -50,6 +50,13 @@ public class PostService {
         return null;
     }
 
+    public Post detail(int id) {
+        Post post = this.get(id);
+        post.changeViews(post.getViews() + 1);
+        this.postRepository.save(post);
+        return post;
+    }
+
     public void update(int id, PostUpdateDTO postUpdate) {
         Post post = this.get(id);
         if (!post.getPassword().equals(postUpdate.getPassword())) {

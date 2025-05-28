@@ -41,7 +41,7 @@ public class PostController {
     @GetMapping("/detail/{id}")
     public Map<String, Object> detail(@PathVariable("id") int id) {
         Map<String, Object> map = new HashMap<>();
-        Post post = postService.get(id);
+        Post post = postService.detail(id);
         if (post == null) {
             map.put("status", "error");
             return map;
