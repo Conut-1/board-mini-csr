@@ -43,6 +43,11 @@ public class PostService {
         this.postRepository.save(post);
     }
 
+    public void adminDelete(int id) {
+        Post post = this.get(id);
+        this.postRepository.delete(post);
+    }
+
     public void delete(int id, PostDeleteDTO postDelete) {
         Post post = this.get(id);
         this.postRepository.delete(post);

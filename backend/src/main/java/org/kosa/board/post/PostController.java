@@ -12,6 +12,7 @@ import java.util.Map;
 import org.kosa.board.post.dto.PostCreateDTO;
 import org.kosa.board.post.dto.PostDeleteDTO;
 import org.kosa.board.post.dto.PostUpdateDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,15 @@ public class PostController {
     public Map<String, Object> delete(@PathVariable("id") int id, @RequestBody @Valid PostDeleteDTO post) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		postService.delete(id, post);
+		map.put("status", "ok");
+		return map;
+    }
+
+	@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/delete/{id}")
+    public Map<String, Object> adminDelete(@PathVariable("id") int id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		postService.adminDelete(id);
 		map.put("status", "ok");
 		return map;
     }
