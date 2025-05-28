@@ -92,7 +92,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/isExistMemberId")
-	public Map<String, Object> isExist(String memberId) {
+	public Map<String, Object> isExist(@RequestParam("memberId") String memberId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isExist", memberService.isExist(memberId));
 		return map;
