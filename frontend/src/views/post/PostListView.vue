@@ -3,17 +3,15 @@
         <div class="card">
             <div class="card-header">게시물 목록</div>
             <div class="card-body">
-                <!-- <form action="${pageContext.request.contextPath}/post/list" class="d-flex gap-2 mb-3">
+                <div class="d-flex gap-2 mb-3">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="searchValue" id="searchValue" value="${param.searchValue}">
-                        <input class="btn btn-outline-primary" type="submit" value="검색">
+                        <input type="text" v-model="searchValue" class="form-control">
+                        <button @click="search" class="btn btn-outline-primary">검색</button>
                     </div>
-                    <select class="form-select w-6rem" name="size" id="size">
-                        <c:forTokens items="10,20,30,50,100" delims="," var="size">
-                            <option value="${ size }" ${pageResponse.size == size ? 'selected' : ''}>${ size }개</option>
-                        </c:forTokens>
+                    <select v-model="size" @change="changeSize" class="form-select w-6rem">
+                        <option v-for="option in sizeOptions" :value="option" v-text="`${option}개`" :class="{ selected: paging.size === option}"></option>
                     </select>
-                </form> -->
+                </div>
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
@@ -24,10 +22,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="postList.length === 0">
+                        <tr v-if="paging.content.length === 0">
                             <td class="text-center" colspan="4" >검색결과가 없습니다</td>
                         </tr>
-                        <tr v-for="post in postList" :key="post.postNo">
+                        <tr v-for="post in paging.content" :key="post.postNo">
                             <td v-text="post.postNo"></td>
                             <td><router-link :to="{ name: 'postDetail', params: { id: post.postNo } }" v-text="post.title"></router-link></td>
                             <td v-text="post.createDate"></td>
@@ -35,26 +33,25 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- <div class="d-flex">
+                <div class="d-flex">
                     <div class="col"></div>
-                    <nav class="col-auto">
-                        <ul class="pagination mb-0">
-                            <li class="page-item ${ pageResponse.firstGroup ? 'disabled' : '' }">
-                                <a class="page-link" href="${pageContext.request.contextPath}/post/list?page=${ pageResponse.startPage - 1 }&size=${ pageResponse.size }&searchValue=${param.searchValue}">이전</a>
+                    <div v-if="!paging.empty" class="col-auto">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item" :class="{ disabled: paging.firstGroup }">
+                                <router-link :to="{ name: 'postList', query: { ...route.query, page: paging.startPage - 1} }" class="page-link">이전</router-link>
                             </li>
-                            <c:forEach var="pageNo" begin="${ pageResponse.startPage }" end="${ pageResponse.endPage }">
-                                <li class="page-item ${ pageNo == pageResponse.pageNo ? 'active' : '' }"><a class="page-link" href="${pageContext.request.contextPath}/post/list?page=${ pageNo }&size=${ pageResponse.size }&searchValue=${param.searchValue}">${ pageNo }</a></li>
-                            </c:forEach>
-                            <li class="page-item ${ pageResponse.lastGroup ? 'disabled' : '' }">
-                                <a class="page-link" href="${pageContext.request.contextPath}/post/list?page=${ pageResponse.endPage + 1 }&size=${ pageResponse.size }&searchValue=${param.searchValue}">다음</a>
+                            <li v-for="page in range(paging.startPage, paging.endPage + 1)" class="page-item" :class="{ active: page == paging.number }">
+                                <router-link :to="{ name: 'postList', query: { ...route.query, page } }" v-text="page" class="page-link"></router-link>
+                            </li>
+                            <li class="page-item" :class="{ disabled: paging.lastGroup }">
+                                <router-link :to="{ name: 'postList', query: { ...route.query, page: paging.endPage + 1 } }" class="page-link">다음</router-link>
                             </li>
                         </ul>
-                    </nav>
-                    <div class="d-flex col justify-content-end">
-                        <a href="${pageContext.request.contextPath}/post/create" class="btn btn-primary">글쓰기</a>
                     </div>
-                </div> -->
-                <router-link :to="{ name: 'postCreate' }" class="btn btn-primary">글쓰기</router-link>
+                    <div class="d-flex col justify-content-end">
+                        <router-link :to="{ name: 'postCreate' }" class="btn btn-primary">글쓰기</router-link>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -62,23 +59,43 @@
 
 <script setup>
     import axios from 'axios';
-    import { reactive } from 'vue';
+    import { range } from 'lodash';
+    import { ref, watch } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
 
-    const postList = reactive([]);
+    const route = useRoute();
+    const router = useRouter();
+    const sizeOptions = [10, 20, 30, 50, 100];
 
-    fetchPostList();
+    const paging = ref({ content: []});
+    const searchValue = ref(route.query.searchValue ?? '');
+    const size = ref(sizeOptions[0]);
 
-    async function fetchPostList() {
-        const response = await axios.get('/api/post/list');
-        postList.push(...response.data.postList);
+    console.log(route);
+
+    fetchPaging({});
+    watch(() => route.query, (current) => {
+        fetchPaging(current);
+    })
+
+    async function fetchPaging(params) {
+        const response = await axios.get('/api/post/list', {
+            params
+        });
+        paging.value = response.data.paging;
     }
 
-    // const contextDiv = document.body.querySelector("#context");
-    // const contextPath = contextDiv.dataset.contextPath;
+    function search() {
+        const query = { searchValue: searchValue.value};
+        if (route.query.size) {
+            query.size = route.query.size;
+        }
+        router.push({ name: 'postList', query });
+    }
 
-    // const size = document.querySelector("#size");
-    // const searchValue = document.querySelector("#searchValue")
-    // size.addEventListener("change", e => {
-    //     location.href = contextPath + "/post/list?size=" + size.value + "&searchValue=" + searchValue.value;	
-    // });
+    function changeSize() {
+        const query = { ...route.query };
+        query.size = size.value;
+        router.push({ name: 'postList', query });
+    }
 </script>
