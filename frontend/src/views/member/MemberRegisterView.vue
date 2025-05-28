@@ -118,9 +118,13 @@
     // TODO: 유효성 검사
 
     async function register() {
-        // TODO: 실패 처리
-        const response = await axios.post('/api/member/register', member);
-        router.push({ name: 'home' });
+        try {
+            await axios.post('/api/member/register', member);
+            alert("회원가입이 성공했습니다.");
+            router.push({ name: 'home' });
+        } catch (e) {
+            alert('회원가입이 실패했습니다.');
+        }
     }
 
     // const registerForm = document.querySelector("#register-form");
