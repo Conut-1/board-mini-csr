@@ -67,8 +67,6 @@ public class MemberService {
 	}
 
 	public void update(String id, MemberUpdateDTO memberUpdate) {
-		// TODO: 스프링 시큐리티에서 로그인된 사용자 가져오기
-		// TODO: OSIV를 꺼서 메소드에 @Transactional을 적용하기
 		Member member = this.get(id);
 		member.changeName(memberUpdate.getName());
 		member.changeEmail(memberUpdate.getEmail());
