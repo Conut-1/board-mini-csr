@@ -1,14 +1,14 @@
 <template>
     <div class="container my-3">
-        <!-- <form th:action="@{/member/list}" class="d-flex gap-2 mb-3">
+        <div class="d-flex gap-2 mb-3">
             <div class="input-group">
-                <input type="text" class="form-control" name="searchValue" id="searchValue" th:value="${param.searchValue}">
-                <input class="btn btn-outline-primary" type="submit" value="검색">
+                <input type="text" v-model="searchValue" class="form-control">
+                <button @click="search" class="btn btn-outline-primary">검색</button>
             </div>
-            <select class="form-select w-6rem" name="size" id="size" th:with="sizes=${new int[]{10,20,30,50,100}}">
-                <option th:each="size: ${sizes}" th:value="${size}" th:text="|${size}개|" th:selected="${paging.size == size}"></option>
+            <select v-model="size" @change="changeSize" class="form-select w-6rem">
+                <option v-for="option in sizeOptions" :value="option" v-text="`${option}개`" :class="{ selected: paging.size === option}"></option>
             </select>
-        </form> -->
+        </div>
         <table class="table table-bordered table-hover">
             <thead class="table-light">
                 <tr>
@@ -22,10 +22,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="memberList.length === 0">
+                <tr v-if="paging.content.length === 0">
                     <td class="text-center" colspan="7" >검색결과가 없습니다</td>
                 </tr>
-                <tr v-for="member in memberList" :key="member.memberNo">
+                <tr v-for="member in paging.content" :key="member.memberNo">
                     <td v-text="member.memberNo"></td>
                     <td><router-link :to="{ name: 'memberDetail', params: { id: member.id }}" v-text="member.id"></router-link></td>
                     <td v-text="member.name"></td>
@@ -36,39 +36,61 @@
                 </tr>
             </tbody>
         </table>
-        <!-- <div th:if="${!paging.isEmpty()}">
+        <div v-if="!paging.empty">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${paging.firstGroup} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${paging.startPage - 1}|}">
-                        <span>이전</span>
-                    </a>
+                <li class="page-item" :class="{ disabled: paging.firstGroup }">
+                    <router-link :to="{ name: 'memberList', query: { ...route.query, page: paging.startPage - 1} }" class="page-link">이전</router-link>
                 </li>
-                <li th:each="page: ${#numbers.sequence(paging.startPage, paging.endPage)}"
-                th:classappend="${page == paging.number} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                <li v-for="page in range(paging.startPage, paging.endPage + 1)" class="page-item" :class="{ active: page == paging.number }">
+                    <router-link :to="{ name: 'memberList', query: { ...route.query, page } }" v-text="page" class="page-link"></router-link>
                 </li>
-                <li class="page-item" th:classappend="${paging.lastGroup} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${paging.endPage + 1}|}">
-                        <span>다음</span>
-                    </a>
+                <li class="page-item" :class="{ disabled: paging.lastGroup }">
+                    <router-link :to="{ name: 'memberList', query: { ...route.query, page: paging.endPage + 1 } }" class="page-link">다음</router-link>
                 </li>
             </ul>
-        </div> -->
+        </div>
     </div>
 </template>
 
 <script setup>
-    import { reactive } from 'vue';
+    import { ref, watch } from 'vue';
     import axios from 'axios';
+    import { range } from 'lodash';
+    import { useRoute, useRouter } from 'vue-router';
 
-    const memberList = reactive([]);
+    const route = useRoute();
+    const router = useRouter();
+    const sizeOptions = [10, 20, 30, 50, 100];
 
-    fetchMemberList();
+    const paging = ref({ content: [] });
+    const searchValue = ref(route.query.searchValue ?? '');
+    const size = ref(sizeOptions[0]);
 
-    async function fetchMemberList() {
+    fetchPaging(0);
+    watch(() => route.query, (current) => {
+        fetchPaging(current);
+    });
+
+    async function fetchPaging(params) {
         // TODO: status 확인 후에 처리
-        const response = await axios.get('/api/member/list');
-        memberList.push(...response.data.memberList);
+        const response = await axios.get('/api/member/list', {
+            params
+        });
+        paging.value = response.data.paging;
+    }
+
+    function search() {
+        const query = { searchValue: searchValue.value};
+        if (route.query.size) {
+            query.size = route.query.size;
+        }
+        router.push({ name: 'memberList', query });
+    }
+
+    function changeSize() {
+        const query = { ...route.query };
+        query.size = size.value;
+        router.push({ name: 'memberList', query });
     }
 
     async function unlock(member) {
@@ -76,23 +98,4 @@
         const response = await axios.post(`/api/member/unlock/${member.id}`);
         member.locked = false;
     }
-
-	// const size = document.querySelector("#size");
-	// const searchValue = document.querySelector("#searchValue")
-	// const unlockButtons = document.querySelectorAll(".unlock-button");
-
-	// size.addEventListener("change", e => {
-	// 	location.href = "[[@{/member/list}]]" + "?size=" + size.value + "&searchValue=" + searchValue.value;	
-	// });
-	// unlockButtons.forEach(unlockButton => {
-	// 	unlockButton.addEventListener("click", async (e) => {
-	// 		e.preventDefault();
-
-	// 		await fetch("[[@{/member/unlock}]]" + `?memberId=${unlockButton.getAttribute("target")}`, {
-	// 			method: 'post'
-	// 		});
-
-	// 		location.href = "";
-	// 	})
-	// });
 </script>
