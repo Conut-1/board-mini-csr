@@ -18,11 +18,11 @@
                 <pre v-text="post.content" class="post-content"></pre>
                 <div class="d-flex gap-2">
                     <router-link :to="{ name: 'postUpdate', params: { id: post.postNo }}" class="btn btn-primary">수정</router-link>
-                    <!-- TODO: 관리자 삭제 -->
-                    <button type="button" class="btn btn-danger" id="admin-delete-post-button">관리자 삭제</button>
-                    <!-- TODO: 사용자 삭제 -->
-                    <button @click="deletePost" type="button" class="btn btn-danger" id="delete-post-button">삭제</button>
-                    <input type="password" v-model="password" class="form-control w-6rem" id="delete-post-password">
+                    <button v-if="roles.includes(ADMIN_ROLE)" @click="adminDeletePost" class="btn btn-danger">관리자 삭제</button>
+                    <template v-if="!roles.includes(ADMIN_ROLE)">
+                        <button @click="deletePost" class="btn btn-danger">삭제</button>
+                        <input type="password" v-model="password" class="form-control w-6rem" placeholder="비밀번호">
+                    </template>
                 </div>
             </div>
         </div>
@@ -31,11 +31,15 @@
 
 <script setup>
     import axios from 'axios';
-    import { reactive, ref } from 'vue';
+    import { inject, reactive, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
+
+    const ADMIN_ROLE = 'ROLE_ADMIN';
 
     const router = useRouter();
     const route = useRoute();
+
+    const roles = inject('roles');
 
     const post = reactive({});
     const password = ref('');
@@ -47,77 +51,32 @@
         Object.assign(post, response.data.post);
     }
 
-    async function deletePost() {
-        const response = await axios.post(`/api/post/delete/${route.params.id}`, { password: password.value });
-        router.push({ name: 'postList' });
+    async function adminDeletePost() {        
+        if (!confirm("게시글을 삭제하시겠습니까?")) return;
+
+        try {
+            await axios.post(`/api/post/admin/delete/${route.params.id}`);
+            alert("게시글 삭제가 성공했습니다.");
+            router.push({ name: 'postList' });
+        } catch (e) {
+            alert("게시글 삭제가 실패했습니다.");
+        }
     }
 
-    // const adminDeletePostButton = document.querySelector("#admin-delete-post-button");
-    // if (adminDeletePostButton) {
-    //     adminDeletePostButton.addEventListener("click", adminUpdatePost);
-    // }
+    async function deletePost() {        
+        if (password.value.length === 0) {
+            // password.focus();
+            return;
+        }
 
-    // async function adminUpdatePost(e) {
-    //     e.preventDefault();
+        if (!confirm("게시글을 삭제하시겠습니까?")) return;
 
-    //     const postNo = document.querySelector("#delete-post-post-no");
-
-    //     if (!confirm("게시글을 삭제하시겠습니까?")) return;
-
-    //     const body = {
-    //         postNo: postNo.value,
-    //     };
-
-    //     const response = await fetch("delete", {
-    //         method: 'post',
-    //         headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    //         body: JSON.stringify(body)
-    //     });
-
-    //     const json = await response.json();
-    //     if (json.status === "ok") {
-    //         alert("게시글 삭제가 성공했습니다.");
-    //         location.href = "list";
-    //         return;
-    //     }
-    //     alert("게시글 삭제가 실패했습니다.");
-    // }
-
-    // const deletePostButton = document.querySelector("#delete-post-button");
-    // if (deletePostButton) {
-    //     deletePostButton.addEventListener("click", updatePost);
-    // }
-
-    // async function updatePost(e) {
-    //     e.preventDefault();
-
-    //     const postNo = document.querySelector("#delete-post-post-no");
-    //     const password = document.querySelector("#delete-post-password");
-
-    //     if (password.value.length === 0) {
-    //         password.focus();
-    //         return;
-    //     }
-
-    //     if (!confirm("게시글을 삭제하시겠습니까?")) return;
-
-    //     const body = {
-    //         postNo: postNo.value,
-    //         password: password.value,
-    //     };
-
-    //     const response = await fetch("delete", {
-    //         method: 'post',
-    //         headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    //         body: JSON.stringify(body)
-    //     });
-
-    //     const json = await response.json();
-    //     if (json.status === "ok") {
-    //         alert("게시글 삭제가 성공했습니다.");
-    //         location.href = "list";
-    //         return;
-    //     }
-    //     alert("게시글 삭제가 실패했습니다.");
-    // }
+        try {
+            await axios.post(`/api/post/delete/${route.params.id}`, { password: password.value });
+            alert("게시글 삭제가 성공했습니다.");
+            router.push({ name: 'postList' });
+        } catch (e) {
+            alert("게시글 삭제가 실패했습니다.");
+        }
+    }
 </script>
