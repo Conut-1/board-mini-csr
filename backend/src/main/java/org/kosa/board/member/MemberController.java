@@ -33,7 +33,7 @@ public class MemberController {
 	public ResponseEntity<Map<String, Object>> list(
 		@RequestParam(value = "page", defaultValue = "0") int page,
 		@RequestParam(value = "size", defaultValue = "10") int size,
-		@RequestParam(value = "searchValue", defaultValue = "10") String searchValue
+		@RequestParam(value = "searchValue", required = false) String searchValue
 	) {
 		// TODO: 인자를 하나로 합치기?
 		Map<String, Object> map = new HashMap<>();

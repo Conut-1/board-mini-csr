@@ -21,20 +21,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MemberService {
 	private final MemberRepository memberRepository;
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public PageResponseVO<Member> list(int pageNo, int size) {
+	public PageResponseVO<Member> list(int pageNo, int size, String searchValue) {
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("createDate"));
 		Pageable pageable = PageRequest.of(pageNo, size, Sort.by(sorts));
-		Page<Member> page = this.memberRepository.findAll(pageable);
+		Page<Member> page = searchValue == null
+			? this.memberRepository.findAll(pageable)
+			: this.memberRepository.findByIdContaining(searchValue, pageable);
 		return new PageResponseVO<>(page, 10);
 	}
 
