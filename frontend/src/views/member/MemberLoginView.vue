@@ -35,8 +35,9 @@
             return;
         }
 
-        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-]).{8,20}$/;
-        if (!passwordPattern.test(formData.password)) {
+        // const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-]).{8,20}$/;
+        // if (!passwordPattern.test(formData.password)) {
+        if (formData.password.length === 0) {
             alert("비밀번호가 유효하지 않습니다.");
             return;
         }
@@ -45,9 +46,12 @@
         params.append('username', formData.id);
         params.append('password', formData.password);
 
-        const response = await axios.post('/api/member/login', params);
-
-        await fetchMe();
-        router.push({ name: 'home' });
+        try {
+            await axios.post('/api/member/login', params);
+            await fetchMe();
+            router.push({ name: 'home' });
+        } catch (e) {
+            alert("로그인 실패");
+        }
     }
 </script>
