@@ -96,8 +96,9 @@ public class MemberController {
 		return map;
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/unlock/{id}")
-	public Map<String, Object> unlock(@PathVariable("id") String id) throws IOException {
+	public Map<String, Object> unlock(@PathVariable("id") String id) {
 		memberService.unlock(id);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", "ok");
