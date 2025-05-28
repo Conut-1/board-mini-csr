@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,9 +34,12 @@ public class MemberController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list")
-	public ResponseEntity<Map<String, Object>> list() throws IOException {
+	public ResponseEntity<Map<String, Object>> list(
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "10") int size) {
+		// TODO: 인자를 하나로 합치기?
 		Map<String, Object> map = new HashMap<>();
-		map.put("memberList", memberService.list());
+		map.put("paging", memberService.list(page, size));
 		return ResponseEntity.ok().body(map);
 	}
 
