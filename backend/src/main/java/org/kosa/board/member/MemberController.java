@@ -72,12 +72,10 @@ public class MemberController {
 		return map;
 	}
 
-	@PostMapping("/update/{id}")
-	public Map<String, Object> update(@PathVariable("id") String id, @RequestBody @Valid MemberUpdateDTO member) {
-		// TODO: id에 대해서 검증 가능? 8 ~ 20자
+	@PostMapping("/update")
+	public Map<String, Object> update(@RequestBody @Valid MemberUpdateDTO member, Principal principal) {
 		Map<String, Object> map = new HashMap<String, Object>();
-
-		memberService.update(id, member);
+		memberService.update(principal.getName(), member);
 		map.put("status", "ok");
 		return map;
 	}
