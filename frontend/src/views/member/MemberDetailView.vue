@@ -36,7 +36,7 @@
                 </dl>
                 <template v-if="id === route.params.id">
                     <router-link :to="{ name: 'memberUpdate', params: { id: member.id } }" class="btn btn-primary">수정</router-link>
-                    <button type="button" @click="withdraw" class="btn btn-danger">탈퇴</button>
+                    <WithdrawMemberButton />
                 </template>
             </div>
         </div>
@@ -44,15 +44,14 @@
 </template>
 
 <script setup>
+    import WithdrawMemberButton from '@/components/member/WithdrawMemberButton.vue';
     import axios from 'axios';
     import { inject, reactive } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
+    import { useRoute } from 'vue-router';
 
-    const router = useRouter();
     const route = useRoute();
 
     const id = inject('id');
-    const { cleanMe } = inject('actions');
 
     const member = reactive({});
 
@@ -62,14 +61,5 @@
         // TODO: 실패 처리?
         const response = await axios.get(`/api/member/detail/${route.params.id}`);
         Object.assign(member, response.data.member);
-    }
-
-    async function withdraw() {
-        if (!confirm("정말 탈퇴하시겠습니까?")) return;
-
-        const resposne = await axios.post('/api/member/withdraw');
-
-        await cleanMe();
-        router.push({ name: 'home' });
     }
 </script>
