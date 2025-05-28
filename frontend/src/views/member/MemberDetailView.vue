@@ -34,10 +34,10 @@
                     <!-- <dt class="col-sm-3">취미</dt>
                     <dd class="col-sm-9">독서, 여행, 운동</dd> -->
                 </dl>
-                <!-- TODO: 해당 멤버 로그인 상태일 때, 어드민일 때 출력 -->
-                <router-link :to="{ name: 'memberUpdate', params: { id: member.id } }" class="btn btn-primary">수정</router-link>
-                <!-- TODO: 해당 멤버 로그인 상태일 때 출력 -->
-                <button type="button" @click="withdraw" class="btn btn-danger" id="withdraw-member-button">탈퇴</button>
+                <template v-if="id === route.params.id">
+                    <router-link :to="{ name: 'memberUpdate', params: { id: member.id } }" class="btn btn-primary">수정</router-link>
+                    <button type="button" @click="withdraw" class="btn btn-danger">탈퇴</button>
+                </template>
             </div>
         </div>
     </div>
@@ -49,7 +49,9 @@
     import { useRoute, useRouter } from 'vue-router';
 
     const router = useRouter();
+    const route = useRoute();
 
+    const id = inject('id');
     const { cleanMe } = inject('actions');
 
     const member = reactive({});
@@ -58,7 +60,6 @@
 
     async function fetchMember() {
         // TODO: 실패 처리?
-        const route = useRoute();
         const response = await axios.get(`/api/member/detail/${route.params.id}`);
         Object.assign(member, response.data.member);
     }
@@ -71,18 +72,4 @@
         await cleanMe();
         router.push({ name: 'home' });
     }
-    // const withdraw = document.body.querySelector("#withdraw-member-button");
-
-    // withdraw.addEventListener("click", async () => {
-    //     if (!confirm("정말 탈퇴하시겠습니까?")) return;
-
-    //     const response = await fetch("withdraw", {
-    //         method: 'post'
-    //     });
-
-    //     const json = await response.json();
-    //     if (json.status === "ok") {
-    //         location.href = "/board";
-    //     }
-    // });
 </script>
