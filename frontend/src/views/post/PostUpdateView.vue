@@ -73,12 +73,12 @@
 
         if (!confirm("게시글을 수정하시겠습니까?")) return;
 
-        const response = await axios.post(`/api/post/update/${route.params.id}`, post);
-        if (response.data.status === "ok") {
+        try {
+            await axios.post(`/api/post/update/${route.params.id}`, post);
             alert("게시글 수정이 성공했습니다.");
             router.push({ name: 'postDetail', params: { id: route.params.id}});
-            return;
+        } catch (e) {
+            alert("게시글 수정이 실패했습니다.");
         }
-        alert("게시글 수정이 실패했습니다.");
     }
 </script>
