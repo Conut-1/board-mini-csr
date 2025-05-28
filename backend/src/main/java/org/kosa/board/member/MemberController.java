@@ -1,11 +1,8 @@
 package org.kosa.board.member;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.kosa.board.auth.CustomUserDetails;
 import org.kosa.board.member.dto.MemberRegisterDTO;
@@ -13,7 +10,6 @@ import org.kosa.board.member.dto.MemberUpdateDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,29 +65,17 @@ public class MemberController {
 	}
 	
 	@PostMapping("/register")
-	public Map<String, Object> register(@RequestBody @Valid MemberRegisterDTO member, BindingResult bindingResult) {
+	public Map<String, Object> register(@RequestBody @Valid MemberRegisterDTO member) {
 		Map<String, Object> map = new HashMap<>();
-		if (bindingResult.hasErrors()) {
-			List<String> messages = bindingResult.getFieldErrors().stream().map((err) -> err.getField() + ": " + err.getDefaultMessage()).collect(Collectors.toList()); 
-			map.put("status", "error");
-			map.put("message", messages);
-			return map;
-		}
 		memberService.create(member);
 		map.put("status", "ok");
 		return map;
 	}
 
 	@PostMapping("/update/{id}")
-	public Map<String, Object> update(@PathVariable("id") String id, @RequestBody @Valid MemberUpdateDTO member, BindingResult bindingResult) {
+	public Map<String, Object> update(@PathVariable("id") String id, @RequestBody @Valid MemberUpdateDTO member) {
 		// TODO: id에 대해서 검증 가능? 8 ~ 20자
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (bindingResult.hasErrors()) {
-			List<String> messages = bindingResult.getFieldErrors().stream().map((err) -> err.getField() + ": " + err.getDefaultMessage()).collect(Collectors.toList());
-			map.put("status", "error");
-			map.put("message", messages);
-			return map;
-		}
 
 		memberService.update(id, member);
 		map.put("status", "ok");
