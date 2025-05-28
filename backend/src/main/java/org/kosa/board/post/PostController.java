@@ -1,6 +1,7 @@
 package org.kosa.board.post;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import java.util.Map;
 import org.kosa.board.post.dto.PostCreateDTO;
 import org.kosa.board.post.dto.PostDeleteDTO;
 import org.kosa.board.post.dto.PostUpdateDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +28,14 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/list")
-    public Map<String, Object> list() {
+    public ResponseEntity<Map<String, Object>> list(
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "10") int size,
+		@RequestParam(value = "searchValue", required = false) String searchValue
+	) {
         Map<String, Object> map = new HashMap<>();
-        map.put("postList", postService.list());
-        return map;
+        map.put("paging", postService.list(page, size, searchValue));
+		return ResponseEntity.ok().body(map);
     }
 
     @GetMapping("/detail/{id}")
