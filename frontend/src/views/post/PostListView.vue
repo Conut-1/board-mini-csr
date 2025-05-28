@@ -25,12 +25,7 @@
                         <tr v-if="paging.content.length === 0">
                             <td class="text-center" colspan="4" >검색결과가 없습니다</td>
                         </tr>
-                        <tr v-for="post in paging.content" :key="post.postNo">
-                            <td v-text="post.postNo"></td>
-                            <td><router-link :to="{ name: 'postDetail', params: { id: post.postNo } }" v-text="post.title"></router-link></td>
-                            <td v-text="post.createDate"></td>
-                            <td v-text="post.views"></td>
-                        </tr>
+                        <PostItem v-for="post in paging.content" :key="post.postNo" v-bind="post"></PostItem>
                     </tbody>
                 </table>
                 <div class="d-flex">
@@ -58,6 +53,7 @@
 </template>
 
 <script setup>
+    import PostItem from '@/components/post/PostItem.vue';
     import axios from 'axios';
     import { range } from 'lodash';
     import { ref, watch } from 'vue';
@@ -70,8 +66,6 @@
     const paging = ref({ content: []});
     const searchValue = ref(route.query.searchValue ?? '');
     const size = ref(sizeOptions[0]);
-
-    console.log(route);
 
     fetchPaging({});
     watch(() => route.query, (current) => {
