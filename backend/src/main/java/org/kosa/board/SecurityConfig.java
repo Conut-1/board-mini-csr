@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,12 +22,6 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()).
 			csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/**"))).
-			formLogin((formLogin) -> formLogin.loginPage("/api/member/login").successHandler((request, response, authentication) -> {
-				response.setStatus(HttpServletResponse.SC_OK);
-				response.setContentType("application/json;charset=UTF-8");
-
-				response.getWriter().write("{\"status\": \"ok\", \"message\": \"login success\"}");
-			})).
 			logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout")).logoutSuccessHandler((request, response, authentication) -> {
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.setContentType("application/json;charset=UTF-8");
