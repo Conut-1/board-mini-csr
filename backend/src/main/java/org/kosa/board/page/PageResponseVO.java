@@ -15,6 +15,7 @@ public class PageResponseVO <T> implements Iterable<T> {
 	private final Page<T> page;
 	private final int startPage;
 	private final int endPage;
+	@JsonIgnore
 	private final int groupSize;
 
 	public PageResponseVO(Page<T> page, int groupSize) {
@@ -30,10 +31,6 @@ public class PageResponseVO <T> implements Iterable<T> {
 
 	public boolean isLastGroup() {
 		return page.getTotalPages() - 1 == endPage;
-	}
-
-	public long getTotalElements() {
-		return page.getTotalElements();
 	}
 
 	public int getNumber() {
