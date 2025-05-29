@@ -32,7 +32,7 @@
     // TODO: 반응형으로 collapse 구현
     async function logout() {
         // TODO: 서버 API route로 분리
-        const response = await axios.post('/api/member/logout');
+        await axios.post('/api/auth/logout');
         cleanMe();
         router.push({ name: 'home' });
     }
