@@ -27,4 +27,12 @@ public class AuthController {
         map.put("message", "login success");
         return map;
     }
+
+    @PostMapping("/logout")
+    public Map<String, Object> logout(HttpSession session) {
+        Map<String, Object> map = new HashMap<>();
+		session.invalidate();
+        map.put("message", "logout success");
+        return map;
+    }
 }

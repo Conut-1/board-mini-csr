@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -22,12 +20,6 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()).
 			csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/**"))).
-			logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout")).logoutSuccessHandler((request, response, authentication) -> {
-				response.setStatus(HttpServletResponse.SC_OK);
-				response.setContentType("application/json;charset=UTF-8");
-
-				response.getWriter().write("{\"status\": \"ok\", \"message\": \"logout success\"}");
-			}).invalidateHttpSession(true)).
 			build();
 	}
 
