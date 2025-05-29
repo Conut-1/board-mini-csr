@@ -12,11 +12,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class CustomUserDetails implements UserDetails {
     private final String id;
     private final String password;
+    private final boolean locked;
     private final List<GrantedAuthority> authorities = new ArrayList<>();
 
     public CustomUserDetails(Member member) {
         this.id = member.getId();
         this.password = member.getPassword();
+        this.locked = member.isLocked();
         if (member.isAdminAuth()) {
             this.authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
         }
@@ -36,6 +38,11 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return this.id;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.locked;
     }
 
     public String getId() {

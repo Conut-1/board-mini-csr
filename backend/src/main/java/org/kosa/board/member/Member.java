@@ -113,4 +113,8 @@ public class Member {
 	public void changeLocked(boolean locked) {
 		this.locked = locked;
 	}
+
+	public void changeLoginFailure(int loginFailure) {
+		this.loginFailure = loginFailure;
+	}
 }

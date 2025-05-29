@@ -20,7 +20,7 @@ public class MemberSecurityService implements UserDetailsService {
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Member> member = this.memberRepository.findById(id);
         if (member.isEmpty()) {
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+            throw new UsernameNotFoundException("아이디나 비밀번호가 틀립니다");
         }
         return new CustomUserDetails(member.get());
     }

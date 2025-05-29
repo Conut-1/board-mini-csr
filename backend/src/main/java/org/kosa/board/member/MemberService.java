@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.kosa.board.common.enums.Gender;
 import org.kosa.board.member.dto.MemberRegisterDTO;
@@ -39,11 +38,8 @@ public class MemberService {
 	}
 
 	public Member get(String id) {
-		Optional<Member> member = this.memberRepository.findById(id);
-		if (member.isPresent()) {
-			return member.get();
-		}
-		return null;
+		return this.memberRepository.findById(id)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
 	public void create(MemberRegisterDTO memberRegister) {
@@ -94,5 +90,25 @@ public class MemberService {
 		Member member = this.get(id);
 		member.changeDeleteDate(LocalDateTime.now());
 		this.memberRepository.save(member);
+	}
+
+	public void handleLoginSuccess(String id) {
+		Member member = this.get(id);
+		member.changeLoginFailure(0);
+		this.memberRepository.save(member);
+	}
+
+	public void handleLoginFailure(String id) {
+		try {
+			Member member = this.get(id);
+			int loginFailure = member.getLoginFailure();
+			member.changeLoginFailure(loginFailure + 1);
+			if (loginFailure == 4) {
+				member.changeLocked(true);
+			}
+			this.memberRepository.save(member);
+		} catch (ResponseStatusException e) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디나 비밀번호가 틀립니다");
+		}
 	}
 }
