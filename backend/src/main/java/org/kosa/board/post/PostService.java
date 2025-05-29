@@ -2,7 +2,6 @@ package org.kosa.board.post;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.kosa.board.page.PageResponseVO;
 import org.kosa.board.post.dto.PostCreateDTO;
@@ -43,11 +42,8 @@ public class PostService {
     }
 
     public Post get(int id) {
-        Optional<Post> post = this.postRepository.findById(id);
-        if (post.isPresent()) {
-            return post.get();
-        }
-        return null;
+        return this.postRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다"));
     }
 
     public Post detail(int id) {
