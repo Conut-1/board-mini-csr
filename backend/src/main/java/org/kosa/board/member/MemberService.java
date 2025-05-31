@@ -82,8 +82,12 @@ public class MemberService {
     }
 
     public boolean isExist(String memberId) {
-		Member member = this.get(memberId);
-		return member != null;
+		try {
+			this.get(memberId);
+			return true;
+		} catch (ResponseStatusException e) {
+			return false;
+		}
     }
 
 	public void withdraw(String id) {
