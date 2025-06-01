@@ -141,6 +141,24 @@
     let validId = "";
 
     async function register() {
+        if (!confirm("회원 가입하시겠습니까?")) return;
+
+        checkIdValidity();
+        checkPasswordValidity();
+        checkPasswordCheckValidity();
+        checkNameValidity();
+        checkEmailValidity();
+        checkBirthDateValidity();
+        checkGenderValidity();
+        checkPhoneNumberValidity();
+        checkPostCodeValidity();
+        checkAddressValidity();
+        checkDetailAddressValidity();
+
+        if (Object.values(invalidity).filter((value) => value.length !== 0).length !== 0) {
+            return;
+        }
+
         try {
             await axios.post('/api/member/register', member);
             alert("회원가입이 성공했습니다.");
@@ -204,6 +222,11 @@
     function checkPasswordCheckValidity() {
         touched.passwordCheck = true;
 
+        if (passwordCheck.value.length === 0) {
+            invalidity.passwordCheck = "비밀번호 확인이 되지 않았습니다.";
+            return;
+        }
+
         if (member.password !== passwordCheck.value) {
             invalidity.passwordCheck = "비밀번호 확인이 일치하지 않습니다.";
             return;
@@ -238,7 +261,7 @@
     function checkBirthDateValidity() {
         touched.birthDate = true;
 
-        if (new Date(member.birthDate) > new Date()) {
+        if (member.birthDate === "" || new Date(member.birthDate) > new Date()) {
             invalidity.birthDate = "생년월일이 유효하지 않습니다.";
             return;
         }
@@ -302,95 +325,4 @@
 
         invalidity.detailAddress = "";
     }
-
-    // const registerForm = document.querySelector("#register-form");
-    // const validCheckers = new Map([
-    //     ["id", checkIdValidity],
-    //     ["password", checkPasswordValidity],
-    //     ["name", checkNameValidity],
-    //     ["email", checkEmailValidity],
-    //     ["birthDate", checkBirthDateValidity],
-    //     ["phoneNumber", checkPhoneNumberValidity],
-    //     ["postCode", checkPostCodeValidity],
-    //     ["address", checkAddressValidity],
-    //     ["detailAddress", checkDetailAddressValidity]
-    // ]);
-    // const fields = new Map(Array.from(validCheckers.keys()).map(field => [field, registerForm.querySelector(`input[name="${field}"`)]));
-    // const validCheckButton = registerForm.querySelector("#valid-check-button");
-    // const passwordCheck = registerForm.querySelector("#register-password-check");
-    // const genderChecked = registerForm.querySelector('input[name="gender"]:checked');
-
-    // window.addEventListener("pageshow", init);
-    // registerForm.addEventListener("submit", register);
-    // validCheckButton.addEventListener("click", checkIdDuplicate);
-    // fields.forEach((input, field) => {
-    //     input.addEventListener("input", () => {
-    //         validCheckers.get(field)();
-    //         if (input.checkValidity()) {
-    //             setValid(input);
-    //         } else {
-    //             setInvalid(input);
-    //         }
-    //     })
-    //     input.addEventListener("invalid", (e) => {
-    //         e.preventDefault();
-    //         setInvalid(input);
-    //     })
-    // });
-    // passwordCheck.addEventListener("input", () => {
-    //     checkPasswordCheckValidity();
-    //     if (passwordCheck.checkValidity()) {
-    //         setValid(passwordCheck);
-    //     } else {
-    //         setInvalid(passwordCheck);
-    //     }
-    // });
-    // passwordCheck.addEventListener("invalid", (e) => {
-    //     e.preventDefault();
-    //     setInvalid(passwordCheck);
-    // });
-
-    // registerForm.querySelectorAll('input[name="gender"]').forEach(input => {
-    //     input.addEventListener("change", () => {
-    //         fields.set("gender", input)
-    //     });
-
-    //     input.addEventListener("invalid", (e) => {
-    //         e.preventDefault();
-    //     });
-    // });
-
-    // const gender = registerForm.querySelector('input[name="gender"]');
-    // gender.addEventListener("invalid", (e) => {
-    //     setInvalid(gender);
-    // });
-
-    // async function register(e) {
-    //     e.preventDefault();
-
-    //     // const hobbies = form.querySelectorAll("input[name='hobbies']:checked");
-    //     // if (hobbies.length === 0) {
-    //     //     alert("하나 이상의 취미를 선택해주세요.");
-    //     //     return;
-    //     // }
-
-    //     if (!confirm("회원 가입하시겠습니까?")) return;
-
-    //     const body = { gender: genderChecked.value };
-    //     Array.from(fields.entries()).forEach(([field, element]) => {body[field] = element.value});
-
-    //     const response = await fetch("register", {
-    //         method: 'post',
-    //         headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    //         body: JSON.stringify(body)
-    //     });
-
-    //     const json = await response.json();
-    //     if (json.status === "ok") {
-    //         alert("회원가입이 성공했습니다.");
-    //         location.href = 'login';
-    //         return;
-    //     }
-    //     alert("회원가입이 실패했습니다.");
-    // }
 </script>
