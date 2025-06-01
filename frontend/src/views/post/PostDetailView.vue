@@ -49,9 +49,10 @@
     async function fetchPost() {
         const response = await axios.get(`/api/post/detail/${route.params.id}`);
         Object.assign(post, response.data.post);
+        axios.post(`/api/post/detail/${route.params.id}/views`);
     }
 
-    async function adminDeletePost() {        
+    async function adminDeletePost() {
         if (!confirm("게시글을 삭제하시겠습니까?")) return;
 
         try {

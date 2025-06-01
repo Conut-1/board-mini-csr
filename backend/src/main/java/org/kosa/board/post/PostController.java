@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("api/post")
 @RequiredArgsConstructor
@@ -43,6 +42,13 @@ public class PostController {
         Map<String, Object> map = new HashMap<>();
         Post post = postService.detail(id);
         map.put("post", post);
+        return map;
+    }
+
+    @PostMapping("/detail/{id}/views")
+    public Map<String, Object> incrementViews(@PathVariable("id") int id) {
+        Map<String, Object> map = new HashMap<>();
+        postService.incrementViews(id);
         return map;
     }
 

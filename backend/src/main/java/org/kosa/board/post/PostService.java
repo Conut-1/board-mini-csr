@@ -48,9 +48,13 @@ public class PostService {
 
     public Post detail(int id) {
         Post post = this.get(id);
+        return post;
+    }
+
+    public void incrementViews(int id) {
+        Post post = this.get(id);
         post.changeViews(post.getViews() + 1);
         this.postRepository.save(post);
-        return post;
     }
 
     public void update(int id, PostUpdateDTO postUpdate) {
