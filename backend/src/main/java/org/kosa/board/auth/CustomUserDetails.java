@@ -13,12 +13,14 @@ public class CustomUserDetails implements UserDetails {
     private final String id;
     private final String password;
     private final boolean locked;
+    private final boolean deleted;
     private final List<GrantedAuthority> authorities = new ArrayList<>();
 
     public CustomUserDetails(Member member) {
         this.id = member.getId();
         this.password = member.getPassword();
         this.locked = member.isLocked();
+        this.deleted = member.getDeleteDate() != null;
         if (member.isAdminAuth()) {
             this.authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
         }
@@ -43,6 +45,11 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         return !this.locked;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !this.deleted;
     }
 
     public String getId() {

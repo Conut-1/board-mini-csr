@@ -5,6 +5,7 @@ import org.kosa.board.member.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,7 +24,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final MemberService memberService;
 
-    public void login(HttpSession session, LoginDTO login) {
+    public void login(HttpSession session, @Valid LoginDTO login) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login.getId(), login.getPassword())
@@ -35,6 +37,8 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디나 비밀번호가 틀립니다");
         } catch (LockedException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "아이디가 잠겼습니다");
+        } catch (DisabledException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디나 비밀번호가 틀립니다");
         }
     }
 }
