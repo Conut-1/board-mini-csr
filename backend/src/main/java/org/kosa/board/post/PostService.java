@@ -7,6 +7,7 @@ import org.kosa.board.page.PageResponseVO;
 import org.kosa.board.post.dto.PostCreateDTO;
 import org.kosa.board.post.dto.PostDeleteDTO;
 import org.kosa.board.post.dto.PostUpdateDTO;
+import org.kosa.board.post.summary.PostDetailSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +47,9 @@ public class PostService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다"));
     }
 
-    public Post detail(int id) {
-        Post post = this.get(id);
-        return post;
+    public PostDetailSummary detail(int id) {
+        return this.postRepository.findDetailByPostNo(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 없습니다"));
     }
 
     public void incrementViews(int id) {

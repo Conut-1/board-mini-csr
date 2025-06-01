@@ -13,6 +13,7 @@ import java.util.Map;
 import org.kosa.board.post.dto.PostCreateDTO;
 import org.kosa.board.post.dto.PostDeleteDTO;
 import org.kosa.board.post.dto.PostUpdateDTO;
+import org.kosa.board.post.summary.PostDetailSummary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class PostController {
     @GetMapping("/detail/{id}")
     public Map<String, Object> detail(@PathVariable("id") int id) {
         Map<String, Object> map = new HashMap<>();
-        Post post = postService.detail(id);
+        PostDetailSummary post = postService.detail(id);
         map.put("post", post);
         return map;
     }
