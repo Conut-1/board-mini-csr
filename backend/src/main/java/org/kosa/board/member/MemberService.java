@@ -9,6 +9,7 @@ import java.util.List;
 import org.kosa.board.common.enums.Gender;
 import org.kosa.board.member.dto.MemberRegisterDTO;
 import org.kosa.board.member.dto.MemberUpdateDTO;
+import org.kosa.board.member.summary.MemberDetailSummary;
 import org.kosa.board.page.PageResponseVO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,11 @@ public class MemberService {
 
 	public Member get(String id) {
 		return this.memberRepository.findById(id)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	}
+
+	public MemberDetailSummary detail(String id) {
+		return this.memberRepository.findSummaryById(id)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 

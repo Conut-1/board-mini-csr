@@ -7,6 +7,7 @@ import java.util.Map;
 import org.kosa.board.auth.CustomUserDetails;
 import org.kosa.board.member.dto.MemberRegisterDTO;
 import org.kosa.board.member.dto.MemberUpdateDTO;
+import org.kosa.board.member.summary.MemberDetailSummary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,15 +56,11 @@ public class MemberController {
 	@GetMapping("/detail/{id}")
 	public Map<String, Object> detail(@PathVariable("id") String id) {
 		Map<String, Object> map = new HashMap<>();
-		Member member = memberService.get(id);
-		if (member == null) {
-			map.put("status", "error");
-			return map;
-		}
+		MemberDetailSummary member = memberService.detail(id);
 		map.put("member", member);
 		return map;
 	}
-	
+
 	@PostMapping("/register")
 	public Map<String, Object> register(@RequestBody @Valid MemberRegisterDTO member) {
 		Map<String, Object> map = new HashMap<>();
