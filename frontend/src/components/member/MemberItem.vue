@@ -4,7 +4,7 @@
         <td><router-link :to="{ name: 'memberDetail', params: { id: member.id }}" v-text="member.id"></router-link></td>
         <td v-text="member.name"></td>
         <td v-text="member.email"></td>
-        <td v-text="member.createDate"></td>
+        <td v-text="createDate"></td>
         <td v-text="member.deleteDate != null ? 'Y' : 'N'"></td>
         <td><button v-if="member.locked" @click="unlock(member)" class="unlock-button">잠금해제</button></td>
     </tr>
@@ -12,6 +12,8 @@
 
 <script setup>
     import axios from 'axios';
+    import format from 'date-format';
+    import { computed } from 'vue';
 
     const member = defineProps({
         memberNo: { type: Number, required: true},
@@ -22,6 +24,8 @@
         deleteDate: { type: String },
         locked: { type: Boolean, required: true}
     });
+
+    const createDate = computed(() => format("yyyy-MM-dd", new Date(member.createDate)));
 
     async function unlock(member) {
         // TODO: status 확인 후에 처리
