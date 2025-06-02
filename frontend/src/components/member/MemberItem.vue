@@ -22,14 +22,16 @@
         email: { type: String, required: true},
         createDate: { type: String, required: true},
         deleteDate: { type: String },
-        locked: { type: Boolean, required: true}
+        locked: { type: Boolean, required: true},
+        index: { type: Number, required: true}
     });
+    const emit = defineEmits(['unlock']);
 
     const createDate = computed(() => format("yyyy-MM-dd", new Date(member.createDate)));
 
     async function unlock(member) {
         // TODO: status 확인 후에 처리
-        const response = await axios.post(`/api/member/unlock/${member.id}`);
-        member.locked = false;
+        await axios.post(`/api/member/unlock/${member.id}`);
+        emit('unlock', member.index, false);
     }
 </script>

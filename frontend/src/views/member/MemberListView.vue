@@ -18,7 +18,9 @@
                         <tr v-if="memberList.length === 0">
                             <td class="text-center" colspan="7" >검색결과가 없습니다</td>
                         </tr>
-                        <MemberItem v-for="member in memberList" :key="member.memberNo" v-bind="member" />
+                        <MemberItem v-for="(member, index) in memberList"
+                            :key="member.memberNo" v-bind="member"
+                            :index="index" @unlock="setMemberLocked" />
                     </tbody>
                 </table>
             </template>
@@ -51,6 +53,10 @@
     watch(() => route.query, (current) => {
         fetchMemberList(current);
     });
+
+    function setMemberLocked(index, locked) {
+        memberList.value[index].locked = locked;
+    }
 
     async function fetchMemberList(params) {
         // TODO: status 확인 후에 처리
