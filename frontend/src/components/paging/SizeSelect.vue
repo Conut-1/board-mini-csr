@@ -17,8 +17,10 @@
     const size = ref(sizeOptions[0]);
 
     function changeSize() {
-        const query = { ...route.query };
-        query.size = size.value;
+        const query = { size: size.value };
+        if (route.query.searchValue) {
+            query.searchValue = route.query.searchValue;
+        }
         router.push({ name: route.name, query });
     }
 </script>
