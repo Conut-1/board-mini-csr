@@ -180,7 +180,9 @@
                     validChecked = true;
                     invalidity.id = "";
                 }
+                return;
             }
+            invalidity.id = "해당 아이디가 이미 존재합니다.";
         }
     }
 
