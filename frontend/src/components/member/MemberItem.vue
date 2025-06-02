@@ -11,6 +11,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import format from 'date-format';
     import { computed } from 'vue';
@@ -31,7 +32,7 @@
 
     async function unlock(member) {
         // TODO: status 확인 후에 처리
-        await axios.post(`/api/member/unlock/${member.id}`);
+        await axios.post(server.route.member.unlock(member.id));
         emit('unlock', member.index, false);
     }
 </script>

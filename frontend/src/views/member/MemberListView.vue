@@ -31,6 +31,7 @@
 <script setup>
     import MemberItem from '@/components/member/MemberItem.vue';
     import Paging from '@/components/paging/Paging.vue';
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { omit } from 'lodash';
     import { ref, watch } from 'vue';
@@ -60,7 +61,7 @@
 
     async function fetchMemberList(params) {
         // TODO: status 확인 후에 처리
-        const response = await axios.get('/api/member/list', {
+        const response = await axios.get(server.route.member.list, {
             params
         });
         memberList.value = response.data.paging.content;

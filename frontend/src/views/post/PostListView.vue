@@ -34,6 +34,7 @@
 <script setup>
     import Paging from '@/components/paging/Paging.vue';
     import PostItem from '@/components/post/PostItem.vue';
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { omit } from 'lodash';
     import { ref, watch } from 'vue';
@@ -58,7 +59,7 @@
     })
 
     async function fetchPostList(params) {
-        const response = await axios.get('/api/post/list', {
+        const response = await axios.get(server.route.post.list, {
             params
         });
         postList.value = response.data.paging.content;

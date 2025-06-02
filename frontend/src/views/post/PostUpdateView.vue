@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { reactive } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
@@ -51,7 +52,7 @@
     fetchPost();
 
     async function fetchPost() {
-        const response = await axios.get(`/api/post/detail/${route.params.id}`);
+        const response = await axios.get(server.route.post.detail(route.params.id));
         Object.assign(post, response.data.post);
     }
 
@@ -74,7 +75,7 @@
         if (!confirm("게시글을 수정하시겠습니까?")) return;
 
         try {
-            await axios.post(`/api/post/update/${route.params.id}`, post);
+            await axios.post(server.route.post.update(route.params.id), post);
             alert("게시글 수정이 성공했습니다.");
             router.push({ name: 'postDetail', params: { id: route.params.id}});
         } catch (e) {

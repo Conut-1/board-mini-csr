@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { inject, reactive } from 'vue';
     import { useRouter } from 'vue-router';
@@ -43,7 +44,7 @@
         }
 
         try {
-            await axios.post('/api/auth/login', member);
+            await axios.post(server.route.auth.login, member);
             await fetchMe();
             router.push({ name: 'home' });
         } catch (e) {

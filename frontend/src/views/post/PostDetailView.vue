@@ -30,6 +30,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { inject, reactive, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
@@ -47,16 +48,16 @@
     fetchPost();
 
     async function fetchPost() {
-        const response = await axios.get(`/api/post/detail/${route.params.id}`);
+        const response = await axios.get(server.route.post.detail(route.params.id));
         Object.assign(post, response.data.post);
-        axios.post(`/api/post/detail/${route.params.id}/views`);
+        axios.post(server.route.post.views(route.params.id));
     }
 
     async function adminDeletePost() {
         if (!confirm("게시글을 삭제하시겠습니까?")) return;
 
         try {
-            await axios.post(`/api/post/admin/delete/${route.params.id}`);
+            await axios.post(server.route.post.adminDelete(route.params.id));
             alert("게시글 삭제가 성공했습니다.");
             router.push({ name: 'postList' });
         } catch (e) {
@@ -73,7 +74,7 @@
         if (!confirm("게시글을 삭제하시겠습니까?")) return;
 
         try {
-            await axios.post(`/api/post/delete/${route.params.id}`, { password: password.value });
+            await axios.post(server.route.post.delete(route.params.id), { password: password.value });
             alert("게시글 삭제가 성공했습니다.");
             router.push({ name: 'postList' });
         } catch (e) {

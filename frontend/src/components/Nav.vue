@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { inject } from 'vue';
     import { useRouter } from 'vue-router';
@@ -31,8 +32,7 @@
 
     // TODO: 반응형으로 collapse 구현
     async function logout() {
-        // TODO: 서버 API route로 분리
-        await axios.post('/api/auth/logout');
+        await axios.post(server.route.auth.logout);
         cleanMe();
         router.push({ name: 'home' });
     }

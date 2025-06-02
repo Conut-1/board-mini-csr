@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { reactive } from 'vue';
     import { useRouter } from 'vue-router';
@@ -70,7 +71,7 @@
         if (!confirm("글을 작성하시겠습니까?")) return;
 
         try {
-            await axios.post('/api/post/create', post);
+            await axios.post(server.route.post.create, post);
             alert("글 작성이 성공했습니다.");
             router.push({ name: 'postList' })
         } catch (e) {

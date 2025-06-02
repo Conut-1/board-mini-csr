@@ -7,6 +7,7 @@
   import Nav from '@/components/Nav.vue';
   import axios from 'axios';
   import { computed, provide, reactive, ref } from 'vue';
+  import { server } from './config/server';
 
   const id = ref('');
   const roles = reactive(['test']);
@@ -23,7 +24,7 @@
   }
 
   async function fetchMe() {
-    const response = await axios.get("/api/member/me");
+    const response = await axios.get(server.route.member.me);
     cleanMe();
     if (response.data) {
       id.value = response.data.id;

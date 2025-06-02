@@ -59,6 +59,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { reactive } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
@@ -84,7 +85,7 @@
 
     async function fetchMember() {
         const route = useRoute();
-        const response = await axios.get(`/api/member/detail/${route.params.id}`);
+        const response = await axios.get(server.route.member.detail(route.params.id));
         Object.assign(member, response.data.member);
     }
 
@@ -134,7 +135,7 @@
         if (!confirm("회원 정보를 수정하시겠습니까?")) return;
 
         try {
-            await axios.post("/api/member/update", member);
+            await axios.post(server.route.member.update, member);
             alert("회원 정보 수정이 성공했습니다.");
             router.push({ name: 'memberDetail', params: { id: route.params.id}});
         } catch {

@@ -45,6 +45,7 @@
 
 <script setup>
     import WithdrawMemberButton from '@/components/member/WithdrawMemberButton.vue';
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { inject, reactive } from 'vue';
     import { useRoute } from 'vue-router';
@@ -59,7 +60,7 @@
 
     async function fetchMember() {
         // TODO: 실패 처리?
-        const response = await axios.get(`/api/member/detail/${route.params.id}`);
+        const response = await axios.get(server.route.member.detail(route.params.id));
         Object.assign(member, response.data.member);
     }
 </script>

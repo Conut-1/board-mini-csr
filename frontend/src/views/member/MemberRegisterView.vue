@@ -100,6 +100,7 @@
 </template>
 
 <script setup>
+    import { server } from '@/config/server';
     import axios from 'axios';
     import { reactive, ref } from 'vue';
     import { useRouter } from 'vue-router';
@@ -160,7 +161,7 @@
         }
 
         try {
-            await axios.post('/api/member/register', member);
+            await axios.post(server.route.member.register, member);
             alert("회원가입이 성공했습니다.");
             router.push({ name: 'home' });
         } catch (e) {
@@ -171,7 +172,7 @@
     async function checkIdDuplicate() {
         if (8 <= member.id.length && member.id.length <= 20) {
             const memberId = member.id;
-            const response = await axios.get("/api/member/isExistMemberId", {
+            const response = await axios.get(server.route.member.isExistMemberId, {
                 params: { memberId }
             });
             if (!response.data.isExist) {
