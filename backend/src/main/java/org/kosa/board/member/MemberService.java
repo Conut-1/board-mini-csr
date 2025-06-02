@@ -70,6 +70,9 @@ public class MemberService {
 
 	public void update(String id, MemberUpdateDTO memberUpdate) {
 		Member member = this.get(id);
+		if (!member.getPassword().equals(memberUpdate.getPassword())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다.");
+		}
 		member.changeName(memberUpdate.getName());
 		member.changeEmail(memberUpdate.getEmail());
 		member.changeBirthDate(LocalDate.parse(memberUpdate.getBirthDate(), formatter));

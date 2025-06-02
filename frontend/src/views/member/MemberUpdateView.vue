@@ -83,7 +83,6 @@
     fetchMember();
 
     async function fetchMember() {
-        // TODO: 비밀번호는 제외하기
         const route = useRoute();
         const response = await axios.get(`/api/member/detail/${route.params.id}`);
         Object.assign(member, response.data.member);
@@ -134,14 +133,12 @@
 
         if (!confirm("회원 정보를 수정하시겠습니까?")) return;
 
-        // TODO: try ~ catch
-        const response = await axios.post("/api/member/update", member);
-
-        if (response.data.status === "ok") {
+        try {
+            await axios.post("/api/member/update", member);
             alert("회원 정보 수정이 성공했습니다.");
             router.push({ name: 'memberDetail', params: { id: route.params.id}});
-            return;
+        } catch {
+            alert("회원 정보 수정이 실패했습니다.");
         }
-        alert("회원 정보 수정이 실패했습니다.");
     }
 </script>
